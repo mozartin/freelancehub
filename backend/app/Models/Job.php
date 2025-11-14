@@ -9,8 +9,6 @@ class Job extends Model
 {
     use HasFactory;
 
-    // ЕСЛИ твоя миграция создаёт таблицу 'jobs', оставь так как есть.
-    // ЕСЛИ ты где-то делала 'freelance_jobs', то добавь:
     protected $table = 'freelance_jobs';
 
     protected $fillable = [
