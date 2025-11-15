@@ -20,4 +20,16 @@ class Job extends Model
         'budget_max',
         'status',
     ];
+
+
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'client_id');
+    }
+
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class, 'job_id');
+    }
+
 }
