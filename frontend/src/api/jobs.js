@@ -23,6 +23,8 @@ export async function getJobById(id) {
 
 // Create job 
 export async function createJob(payload) {
+  console.log(payload);
+  
   const response = await api.post("/api/jobs", payload);
   return response.data;
 }

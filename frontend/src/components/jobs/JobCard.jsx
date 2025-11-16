@@ -70,9 +70,13 @@ export default function JobCard({
               View details
             </Link>
           )}
-          <Button variant="outline" className="text-xs px-3 py-1.5">
-            Apply
-          </Button>
+          {id && (
+            <Link to={`/jobs/${id}?apply=1`}>
+              <Button variant="outline" className="text-xs px-3 py-1.5">
+                Apply
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </Card>

@@ -48,13 +48,15 @@ export default function HomePage() {
               <Link to="/jobs">
                 <Button className="w-full sm:w-auto">Browse jobs</Button>
               </Link>
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto"
-                type="button"
-              >
-                Post a job
-              </Button>
+              <Link to="/jobs/new">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  type="button"
+                >
+                  Post a job
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -68,8 +70,9 @@ export default function HomePage() {
                 FreelanceHub is a full-stack demo app built by
                 <span className="font-semibold text-indigo-700">
                   {" "}
-                  Olena Beliavska  
-                </span> as part of her developer portfolio.
+                  Olena Beliavska
+                </span>{" "}
+                as part of her developer portfolio.
               </p>
 
               <p className="text-[11px] text-slate-500">
