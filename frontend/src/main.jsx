@@ -4,10 +4,17 @@ import './index.css'
 // import JobList from './components/JobList';
 import PageContainer from './components/layout/PageContainer';
 import JobsPage from './pages/JobsPage';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import JobDetailsPage from './pages/JobDetailsPage';
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* <JobList /> */}
-    <JobsPage />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<JobsPage />} />
+        <Route path='/jobs' element={<JobsPage />} />
+        <Route path='/jobs/:id' element={ <JobDetailsPage/>} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>
 );

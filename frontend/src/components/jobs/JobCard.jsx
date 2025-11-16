@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 
 export default function JobCard({
+  id,
   title,
   company,
   location,
@@ -59,9 +61,19 @@ export default function JobCard({
         <span className="text-xs text-slate-400">
           {createdAt || "Posted recently"}
         </span>
-        <Button variant="outline" className="text-xs px-3 py-1.5">
-          Apply
-        </Button>
+        <div className="flex items-center gap-2">
+          {id && (
+            <Link
+              to={`/jobs/${id}`}
+              className="text-xs text-indigo-600 hover:text-indigo-700"
+            >
+              View details
+            </Link>
+          )}
+          <Button variant="outline" className="text-xs px-3 py-1.5">
+            Apply
+          </Button>
+        </div>
       </div>
     </Card>
   );

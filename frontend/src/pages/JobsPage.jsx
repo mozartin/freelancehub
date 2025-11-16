@@ -91,6 +91,7 @@ const fetchJobs = async (query = "") => {
           return (
             <JobCard
               key={job.id}
+              id={job.id}
               title={job.title}
               company={job.company || job.client_name || "Client"}
               location={job.location || "Remote"}
