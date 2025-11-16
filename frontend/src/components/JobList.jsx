@@ -1,6 +1,6 @@
 // src/JobList.jsx
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api } from "../api";
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
@@ -40,7 +40,9 @@ export default function JobList() {
   return (
     <div style={{ maxWidth: "800px", margin: "2rem auto", padding: "0 1rem" }}>
       <h1 style={{ marginBottom: "1rem" }}>FreelanceHub — Job Board</h1>
-
+      <h1 className="text-4xl font-bold text-indigo-600 underline">
+        Hello Tailwind v4 🎉
+      </h1>
       <form
         onSubmit={handleSearch}
         style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}
