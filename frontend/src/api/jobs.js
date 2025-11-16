@@ -1,5 +1,6 @@
 import { api } from "./index";
 
+// List jobs
 export async function getJobs(query = "") {
   const params = query ? { q: query } : {};
   const response = await api.get("/api/jobs", { params });
@@ -14,7 +15,14 @@ export async function getJobs(query = "") {
   return [];
 }
 
+// Single job
 export async function getJobById(id) {
   const response = await api.get(`/api/jobs/${id}`);
+  return response.data;
+}
+
+// Create job 
+export async function createJob(payload) {
+  const response = await api.post("/api/jobs", payload);
   return response.data;
 }

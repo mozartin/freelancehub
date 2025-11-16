@@ -1,25 +1,64 @@
+import { Link, NavLink } from "react-router-dom";
+
 export default function PageContainer({ title, subtitle, children }) {
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-90 transition"
+          >
             <div className="h-8 w-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-semibold">
               FH
             </div>
             <span className="font-semibold text-slate-900">FreelanceHub</span>
-          </div>
+          </Link>
 
           <nav className="hidden sm:flex gap-4 text-sm text-slate-600">
-            <a href="#" className="hover:text-slate-900">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-600 font-semibold"
+                  : "hover:text-slate-900"
+              }
+            >
+              Home
+            </NavLink>
+
+            <NavLink
+              to="/jobs"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-600 font-semibold"
+                  : "hover:text-slate-900"
+              }
+            >
               Jobs
-            </a>
-            <a href="#" className="hover:text-slate-900">
+            </NavLink>
+
+            <NavLink
+              to="/freelancers"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-600 font-semibold"
+                  : "hover:text-slate-900"
+              }
+            >
               Freelancers
-            </a>
-            <a href="#" className="hover:text-slate-900">
+            </NavLink>
+
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-600 font-semibold"
+                  : "hover:text-slate-900"
+              }
+            >
               Dashboard
-            </a>
+            </NavLink>
           </nav>
         </div>
       </header>
