@@ -1,9 +1,9 @@
-import { api } from "./index";
+import api from "./axios";
 
 // List jobs
 export async function getJobs(query = "") {
   const params = query ? { q: query } : {};
-  const response = await api.get("/api/jobs", { params });
+  const response = await api.get("/jobs", { params });
 
   const payload = response.data;
 
@@ -17,14 +17,13 @@ export async function getJobs(query = "") {
 
 // Single job
 export async function getJobById(id) {
-  const response = await api.get(`/api/jobs/${id}`);
+  const response = await api.get(`/jobs/${id}`);
   return response.data;
 }
 
 // Create job 
 export async function createJob(payload) {
-  console.log(payload);
   
-  const response = await api.post("/api/jobs", payload);
+  const response = await api.post("/jobs", payload);
   return response.data;
 }

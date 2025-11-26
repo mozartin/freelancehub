@@ -23,10 +23,22 @@ class ProposalController extends Controller
     // POST /api/jobs/{job}/proposals
     public function storeForJob(Request $request, $jobId)
     {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        // Только фрилансер может отправлять пропозалы
+        if ($user->role !== 'freelancer') {
+            return response()->json([
+                'message' => 'Only freelancers can submit proposals.',
+            ], 403);
+        }
+
         $job = Job::findOrFail($jobId);
 
         $data = $request->validate([
-            'freelancer_id' => 'required|exists:users,id',
             'cover_letter' => 'required|string',
             'proposed_budget' => 'nullable|integer|min:0',
             'estimated_days' => 'nullable|integer|min:1',
@@ -34,12 +46,24 @@ class ProposalController extends Controller
         ]);
 
         $data['job_id'] = $job->id;
+        $data['freelancer_id'] = $user->id;     
         $data['status'] = $data['status'] ?? 'sent';
+ 
+        $exists = Proposal::where('job_id', $job->id)
+            ->where('freelancer_id', $user->id)
+            ->exists();
 
+        if ($exists) {
+            return response()->json([
+                'message' => 'You have already submitted a proposal for this job.',
+            ], 422);
+        }
+        
         $proposal = Proposal::create($data);
 
         return response()->json($proposal->load('job', 'freelancer'), 201);
     }
+
 
     // GET /api/proposals/{id}
     public function show($id)

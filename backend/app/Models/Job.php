@@ -12,6 +12,7 @@ class Job extends Model
     protected $table = 'freelance_jobs';
 
     protected $fillable = [
+        'client_id',   
         'title',
         'description',
         'skills',
@@ -20,7 +21,6 @@ class Job extends Model
         'budget_max',
         'status',
     ];
-
 
     public function client()
     {
@@ -31,5 +31,4 @@ class Job extends Model
     {
         return $this->hasMany(Proposal::class, 'job_id');
     }
-
 }

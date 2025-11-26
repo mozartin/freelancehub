@@ -31,8 +31,21 @@ class JobController extends Controller
     }
 
     // POST /api/jobs
+    // POST /api/jobs
     public function store(Request $request)
     {
+        $user = $request->user(); 
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        if ($user->role !== 'client') {
+            return response()->json([
+                'message' => 'Only clients can create jobs.',
+            ], 403);
+        }
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -43,10 +56,13 @@ class JobController extends Controller
             'status' => 'required|in:open,in_progress,closed',
         ]);
 
+        $data['client_id'] = $user->id;
+
         $job = Job::create($data);
 
         return response()->json($job, 201);
     }
+
 
     // PUT /api/jobs/{id}
     public function update(Request $request, $id)

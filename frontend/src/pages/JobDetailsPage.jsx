@@ -6,6 +6,7 @@ import Textarea from "../components/ui/Textarea";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { getJobById } from "../api/jobs";
+import { createProposal } from "../api/proposals";
 
 export default function JobDetailsPage() {
   const { id } = useParams();
@@ -80,7 +81,6 @@ export default function JobDetailsPage() {
       setSubmitting(true);
 
       const payload = {
-        freelancer_id: 1,
         cover_letter: applyForm.cover_letter,
         proposed_budget: applyForm.proposed_budget
           ? Number(applyForm.proposed_budget)
@@ -225,41 +225,35 @@ export default function JobDetailsPage() {
               )}
 
               <form onSubmit={handleSubmitProposal} className="space-y-3">
-                <Input
-                  label="Full name"
-                  name="full_name"
-                  value={applyForm.full_name}
-                  onChange={handleApplyChange}
-                  placeholder="Your name"
-                />
-
-                <Input
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={applyForm.email}
-                  onChange={handleApplyChange}
-                  placeholder="you@example.com"
-                />
-
-                <Input
-                  label="Your rate (optional)"
-                  name="rate"
-                  type="number"
-                  min="0"
-                  value={applyForm.rate}
-                  onChange={handleApplyChange}
-                  placeholder="e.g. 45"
-                  helperText="Your suggested hourly rate or fixed price."
-                />
-
                 <Textarea
-                  label="Cover letter / message"
-                  name="message"
-                  value={applyForm.message}
+                  label="Cover letter"
+                  name="cover_letter"
+                  value={applyForm.cover_letter}
                   onChange={handleApplyChange}
                   rows={5}
-                  placeholder="Briefly explain why you’re a good fit for this job, your experience and availability..."
+                  placeholder="Briefly explain why you’re a good fit for this job..."
+                />
+
+                <Input
+                  label="Proposed budget (optional)"
+                  name="proposed_budget"
+                  type="number"
+                  min="0"
+                  value={applyForm.proposed_budget}
+                  onChange={handleApplyChange}
+                  placeholder="e.g. 1200"
+                  helperText="Total amount you propose for this project."
+                />
+
+                <Input
+                  label="Estimated days to complete (optional)"
+                  name="estimated_days"
+                  type="number"
+                  min="1"
+                  value={applyForm.estimated_days}
+                  onChange={handleApplyChange}
+                  placeholder="e.g. 7"
+                  helperText="Rough estimate of how many days you need."
                 />
 
                 <div className="pt-2 flex items-center justify-end gap-3">
