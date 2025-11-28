@@ -1,64 +1,73 @@
 // src/auth/AuthContext.jsx
-import { createContext, useContext, useEffect, useState } from "react";
-import api from "../api/axios";
+import { createContext, useContext, useState } from "react";
+import { loginRequest, logoutRequest, registerRequest } from "../api/auth";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    api
-      .get("/me") 
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        localStorage.removeItem("auth_token");
-        setUser(null);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  // Пока просто false — можно позже сделать авто-логин из localStorage
+  const loading = false;
 
   const login = async (email, password) => {
-    const res = await api.post("/login", { email, password });
+    const data = await loginRequest(email, password);
 
-    const { user, token } = res.data; 
+    // Проверяем, что реально приходит
+    console.log("LOGIN RESPONSE:", data);
 
-    localStorage.setItem("auth_token", token);
-    setUser(user);
+    localStorage.setItem("auth_token", data.token);
+    setUser(data.user);
+
+    return data;
   };
 
   const logout = async () => {
     try {
-      await api.post("/logout");
+      await logoutRequest();
     } catch (e) {
-      
+      console.warn("Logout API error, ignoring:", e);
     } finally {
       localStorage.removeItem("auth_token");
       setUser(null);
     }
   };
 
-  const value = {
-    user,
-    setUser,
-    loading,
-    login,
-    logout,
-    isAuthenticated: !!user,
+  const register = async (payload) => {
+    try {
+      const data = await registerRequest(payload);
+      return data;
+    } catch (error) {
+      const response = error?.response;
+      const validationErrors = response?.data?.errors;
+      const message =
+        response?.data?.message || error.message || "Registration failed";
+
+      const wrapped = new Error(message);
+
+      if (validationErrors) {
+        wrapped.validation = validationErrors;
+      }
+
+      throw wrapped;
+    }
   };
 
+  // 🔥 Если токен есть — считаем, что юзер аутентифицирован
+  const isAuthenticated = !!localStorage.getItem("auth_token");
+
   return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        register,
+        isAuthenticated,
+        loading,
+      }}
+    >
+      {children}
     </AuthContext.Provider>
   );
 }
