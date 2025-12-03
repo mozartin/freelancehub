@@ -1,32 +1,41 @@
-# ---------- Stage 1: Composer ----------
-FROM composer:2 AS composer_stage
-WORKDIR /app
-COPY . .
-RUN composer install --no-dev --optimize-autoloader
+# Базовый образ с PHP 8.3 и CLI
+FROM php:8.3-cli
 
-# ---------- Stage 2: PHP + Nginx ----------
-FROM richarvey/nginx-php-fpm:latest
+# Устанавливаем системные пакеты и расширения PHP
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    sqlite3 \
+    libsqlite3-dev \
+  && docker-php-ext-install pdo pdo_sqlite bcmath
 
-# Laravel живёт в public/, говорим это nginx'у
-ENV WEBROOT=/var/www/html/public
-
-# Копируем приложение из composer-стейджа
-COPY --from=composer_stage /app /var/www/html
-
-# Рабочая директория
+# Рабочая директория внутри контейнера
 WORKDIR /var/www/html
 
-# Создаём файл SQLite базы
-RUN touch /var/www/html/database/database.sqlite
+# Устанавливаем composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && rm composer-setup.php
 
-# Миграции + сиды (если что-то в них упадёт - контейнер все равно поднимется)
-RUN php artisan migrate --force && php artisan db:seed --force || true
+# Сначала копируем только composer-файлы — это ускоряет сборку
+COPY composer.json composer.lock ./
 
-# Права на storage и cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Ставим зависимости
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Порт
-EXPOSE 80
+# Теперь копируем всё приложение
+COPY . .
 
-# Стартовый скрипт nginx-php-fpm образа
-CMD ["/start.sh"]
+# Создаём файлы/папки, настраиваем права и кеши
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
+  && touch database/database.sqlite \
+  && chown -R www-data:www-data storage bootstrap/cache database \
+  && php artisan key:generate --force \
+  && php artisan config:cache \
+  && php artisan route:cache
+
+# Порт внутри контейнера (для локала/дебага; Render всё равно пробрасывает свой)
+EXPOSE 8000
+
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
