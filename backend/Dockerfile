@@ -31,7 +31,7 @@ COPY . .
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
   && touch database/database.sqlite \
   && chown -R www-data:www-data storage bootstrap/cache database \
-  && php artisan key:generate --force \
+#   && php artisan key:generate --force \
   && php artisan config:cache \
   && php artisan route:cache
 
