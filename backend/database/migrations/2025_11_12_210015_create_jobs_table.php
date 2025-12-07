@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('freelance_jobs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('client_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('title');
             $table->text('description');
             $table->string('skills')->nullable();
