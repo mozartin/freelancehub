@@ -1,6 +1,6 @@
 FROM php:8.3-cli
 
-# Системные пакеты и расширения
+# Системные пакеты и расширения PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -9,10 +9,10 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
   && docker-php-ext-install pdo pdo_sqlite bcmath
 
-# Рабочая директория
+# Рабочая директория внутри контейнера
 WORKDIR /var/www/html
 
-# Сначала копируем ВЕСЬ проект (чтобы artisan уже был на месте)
+# Копируем весь Laravel-проект внутрь контейнера
 COPY . .
 
 # Устанавливаем composer
@@ -21,17 +21,11 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && rm composer-setup.php
 
 # Ставим зависимости Laravel
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Подготовка storage и базы
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
-  && touch database/database.sqlite \
-  && chown -R www-data:www-data storage bootstrap/cache database \
-  && php artisan config:cache \
-  && php artisan route:cache
-
-# Порт (для локали, на Render подставится $PORT)
+# Открываем порт (для локала)
 EXPOSE 8000
 
-# Запуск Laravel-сервера
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Запускаем Laravel-сервер
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
