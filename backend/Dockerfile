@@ -28,4 +28,5 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 EXPOSE 8000
 
 # Запускаем Laravel-сервер
-CMD ["sh", "-c", "php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# CMD ["sh", "-c", "php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+CMD ["sh", "-c", "php artisan migrate --force || true && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
