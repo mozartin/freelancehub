@@ -11,14 +11,14 @@ use App\Http\Controllers\Api\FreelancerDashboardController;
 
 Route::get('/ping', fn() => response()->json(['ok' => true]));
 
-// Users CRUD (скорее всего, эти позже тоже спрячем за auth, но пока оставим как есть)
+// Users CRUD (most likely these will be protected by auth later, but leaving as is for now)
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::post('/users', [UserController::class, 'store']);
 Route::put('/users/{id}', [UserController::class, 'update']);
 Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-// Jobs — публичные только GET
+// Jobs — public GET only
 Route::get('/jobs', [JobController::class, 'index']);
 Route::get('/jobs/{id}', [JobController::class, 'show']);
 
@@ -42,11 +42,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-   // текущий пользователь
+   // current user
    Route::get('/me', [AuthController::class, 'me']);
    Route::post('/logout', [AuthController::class, 'logout']);
 
-   // 👉 СОЗДАНИЕ/ИЗМЕНЕНИЕ/УДАЛЕНИЕ JOBS — ТОЛЬКО ДЛЯ ЗАЛОГИНЕННЫХ
+   // 👉 CREATE/UPDATE/DELETE JOBS — ONLY FOR AUTHENTICATED USERS
    Route::post('/jobs', [JobController::class, 'store']);
    Route::put('/jobs/{id}', [JobController::class, 'update']);
    Route::delete('/jobs/{id}', [JobController::class, 'destroy']);
@@ -60,7 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/jobs/{job}/proposals', [ProposalController::class, 'storeForJob']);
 });
 
-// Dev route — смена роли
+// Dev route — change role
 Route::patch('/dev/users/{id}/role', function ($id) {
    $user = \App\Models\User::findOrFail($id);
 

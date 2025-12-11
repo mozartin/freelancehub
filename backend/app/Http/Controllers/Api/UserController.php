@@ -23,7 +23,7 @@ class UserController extends Controller
         return User::findOrFail($id);
     }
 
-    // POST /api/users  (типа register)
+    // POST /api/users  (like register)
     public function store(Request $request)
     {
         $data = $request->validate([

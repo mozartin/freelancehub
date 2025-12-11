@@ -11,14 +11,14 @@ import DashboardPage from "./pages/DashboardPage";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-// 👇 добавляем эти два импорта
+// 👇 add these two imports
 import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      {/* 👇 весь апп заворачиваем в AuthProvider */}
+      {/* 👇 wrap entire app in AuthProvider */}
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />

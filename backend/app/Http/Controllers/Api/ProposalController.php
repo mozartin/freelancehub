@@ -29,7 +29,7 @@ class ProposalController extends Controller
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
-        // Только фрилансер может отправлять пропозалы
+        // Only freelancers can submit proposals
         if ($user->role !== 'freelancer') {
             return response()->json([
                 'message' => 'Only freelancers can submit proposals.',

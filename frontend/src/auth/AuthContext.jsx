@@ -7,13 +7,13 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // Пока просто false — можно позже сделать авто-логин из localStorage
+  // For now just false — can later implement auto-login from localStorage
   const loading = false;
 
   const login = async (email, password) => {
     const data = await loginRequest(email, password);
 
-    // Проверяем, что реально приходит
+    // Check what actually comes back
     console.log("LOGIN RESPONSE:", data);
 
     localStorage.setItem("auth_token", data.token);
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // 🔥 Если токен есть — считаем, что юзер аутентифицирован
+  // 🔥 If token exists — consider user authenticated
   const isAuthenticated = !!localStorage.getItem("auth_token");
 
   return (

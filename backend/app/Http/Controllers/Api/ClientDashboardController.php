@@ -21,7 +21,7 @@ class ClientDashboardController extends Controller
 
         $jobs = Job::query()
             ->where('client_id', $user->id)
-            ->withCount('proposals') // добавит поле proposals_count
+            ->withCount('proposals') // adds proposals_count field
             ->orderByDesc('id')
             ->paginate(10);
 

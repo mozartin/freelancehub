@@ -21,7 +21,7 @@ class FreelancerDashboardController extends Controller
 
         $proposals = Proposal::query()
             ->where('freelancer_id', $user->id)
-            ->with('job') // чтобы в ответе была инфа о вакансии
+            ->with('job') // to include job info in response
             ->orderByDesc('id')
             ->paginate(10);
 

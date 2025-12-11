@@ -7,7 +7,7 @@ export async function loginRequest(email, password) {
     password,
   });
 
-  return response.data; // получим { user, token }
+  return response.data; // will get { user, token }
 }
 
 // Logout

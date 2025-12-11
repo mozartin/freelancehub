@@ -37,7 +37,7 @@ class FreelancerProfileController extends Controller
             'linkedin_url' => 'nullable|url',
         ]);
 
-        // (опционально) проверка, что user — фрилансер
+        // (optional) check that user is a freelancer
         // $user = User::findOrFail($data['user_id']);
         // if ($user->role !== 'freelancer') { ... }
 

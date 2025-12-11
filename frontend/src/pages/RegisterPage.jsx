@@ -41,7 +41,7 @@ export default function RegisterPage() {
       await register({
         name,
         email,
-        role, // 🔥 отправляем роль на бэкенд
+        role, // 🔥 send role to backend
         password,
         password_confirmation: passwordConfirmation,
       });
@@ -120,7 +120,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            {/* выбор роли */}
+            {/* role selection */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Register as
