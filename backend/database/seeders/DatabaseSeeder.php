@@ -10,15 +10,30 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Only seed if database is empty
-        if (User::count() === 0 && Job::count() === 0) {
-            $this->call([
-                UserSeeder::class,
-                JobSeeder::class
-            ]);
-            $this->command->info('Database seeded successfully!');
-        } else {
-            $this->command->info('Database already has data. Skipping seeders.');
+        try {
+            $userCount = User::count();
+            $jobCount = Job::count();
+            
+            $this->command->info("Current database state: $userCount users, $jobCount jobs");
+            
+            // Only seed if database is empty
+            if ($userCount === 0 && $jobCount === 0) {
+                $this->command->info('Database is empty. Starting seeders...');
+                $this->call([
+                    UserSeeder::class,
+                    JobSeeder::class
+                ]);
+                
+                $newUserCount = User::count();
+                $newJobCount = Job::count();
+                $this->command->info("Database seeded successfully! Created $newUserCount users and $newJobCount jobs.");
+            } else {
+                $this->command->info('Database already has data. Skipping seeders.');
+            }
+        } catch (\Exception $e) {
+            $this->command->error('Seeder failed: ' . $e->getMessage());
+            $this->command->error('Stack trace: ' . $e->getTraceAsString());
+            throw $e;
         }
     }
 

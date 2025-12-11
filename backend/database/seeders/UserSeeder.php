@@ -9,6 +9,12 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->count(20)->create();
+        // Create 10 clients
+        User::factory()->count(10)->create(['role' => 'client']);
+        
+        // Create 10 freelancers
+        User::factory()->count(10)->create(['role' => 'freelancer']);
+        
+        $this->command->info('Created 10 clients and 10 freelancers');
     }
 }

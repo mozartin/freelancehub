@@ -6,11 +6,23 @@ services:
       composer install --no-interaction --prefer-dist --optimize-autoloader
       php artisan key:generate --force || true
     startCommand: |
+      echo "=== Starting deployment ==="
       mkdir -p database
+      echo "Database directory created"
       touch database/database.sqlite
       chmod 664 database/database.sqlite
+      echo "Database file created"
+      echo "Running migrations..."
       php artisan migrate --force
+      echo "Migrations completed"
+      echo "Checking database state..."
+      php scripts/check-db.php || echo "Database check failed"
+      echo "Running seeders..."
       php artisan db:seed --force
+      echo "Seeders completed"
+      echo "Verifying seeded data..."
+      php scripts/check-db.php || echo "Final database check failed"
+      echo "Starting server..."
       php artisan serve --host=0.0.0.0 --port=$PORT
     envVars:
       - key: APP_ENV
@@ -21,5 +33,7 @@ services:
         value: sqlite
       - key: DB_DATABASE
         value: database/database.sqlite
+      - key: FRONTEND_URL
+        value: https://freelancehub-tau.vercel.app
     healthCheckPath: /api/ping
 
