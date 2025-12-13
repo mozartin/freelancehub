@@ -35,5 +35,5 @@ RUN php artisan package:discover --ansi || true
 EXPOSE 8000
 
 # Start Laravel server
-CMD ["sh", "-c", "set -e && mkdir -p database && touch database/database.sqlite && chmod 664 database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+CMD ["sh", "-c", "echo '=== Starting container ===' && mkdir -p database && touch database/database.sqlite && chmod 664 database/database.sqlite && echo 'Database file created' && php artisan migrate --force || echo 'Migration failed' && php artisan db:seed --force || echo 'Seeding failed' && echo 'Starting server on port ${PORT:-8000}' && exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
 
