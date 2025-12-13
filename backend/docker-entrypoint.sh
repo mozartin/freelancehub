@@ -46,6 +46,11 @@ else
     # Default SSL mode for external hosts
     DB_SSLMODE_VALUE="${DB_SSLMODE:-require}"
     sed -i "s|^DB_SSLMODE=.*|DB_SSLMODE=${DB_SSLMODE_VALUE}|" .env 2>/dev/null || true
+    # Default CA bundle for Postgres SSL (if provided or default path exists)
+    DB_SSLROOTCERT_VALUE="${DB_SSLROOTCERT:-/etc/ssl/certs/ca-certificates.crt}"
+    if [ -f "$DB_SSLROOTCERT_VALUE" ]; then
+        sed -i "s|^DB_SSLROOTCERT=.*|DB_SSLROOTCERT=${DB_SSLROOTCERT_VALUE}|" .env 2>/dev/null || true
+    fi
 fi
 
 # Generate APP_KEY if missing or empty
