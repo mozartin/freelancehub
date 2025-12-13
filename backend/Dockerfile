@@ -20,9 +20,16 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && rm composer-setup.php
 
+# Create .env file if it doesn't exist (needed for artisan commands)
+RUN if [ ! -f .env ]; then cp .env.example .env 2>/dev/null || echo "APP_NAME=Laravel" > .env; fi
+
 # Install Laravel dependencies (including dev for seeders)
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --optimize-autoloader --no-interaction --no-progress
+# Skip scripts during install to avoid package:discover error (APP_KEY not set yet)
+RUN composer install --optimize-autoloader --no-interaction --no-progress --no-scripts
+# Generate app key and run package discovery after install
+RUN php artisan key:generate --force || true
+RUN php artisan package:discover --ansi || true
 
 # Expose port (for local)
 EXPOSE 8000
