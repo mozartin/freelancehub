@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     sqlite3 \
     libsqlite3-dev \
     libpq-dev \
+    ca-certificates \
   && docker-php-ext-install pdo pdo_pgsql pdo_sqlite bcmath
 
 # Working directory inside container
