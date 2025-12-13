@@ -35,5 +35,5 @@ RUN php artisan package:discover --ansi || true
 EXPOSE 8000
 
 # Start Laravel server
-CMD ["sh", "-c", "php artisan migrate --force --seed || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+CMD ["sh", "-c", "set -e && mkdir -p database && touch database/database.sqlite && chmod 664 database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
 
