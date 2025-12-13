@@ -36,8 +36,16 @@ if [ "$DB_CONNECTION_ENV" = "sqlite" ]; then
     touch database/database.sqlite
     chmod 664 database/database.sqlite
 else
-    # Keep provided DB settings (pgsql, etc.)
-    grep -q "^DB_CONNECTION=" .env || echo "DB_CONNECTION=$DB_CONNECTION_ENV" >> .env
+    # Sync .env with provided DB_* env vars (pgsql, etc.)
+    sed -i "s|^DB_CONNECTION=.*|DB_CONNECTION=${DB_CONNECTION_ENV}|" .env 2>/dev/null || true
+    if [ -n "$DB_HOST" ]; then sed -i "s|^DB_HOST=.*|DB_HOST=${DB_HOST}|" .env 2>/dev/null || true; fi
+    if [ -n "$DB_PORT" ]; then sed -i "s|^DB_PORT=.*|DB_PORT=${DB_PORT}|" .env 2>/dev/null || true; fi
+    if [ -n "$DB_DATABASE" ]; then sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${DB_DATABASE}|" .env 2>/dev/null || true; fi
+    if [ -n "$DB_USERNAME" ]; then sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${DB_USERNAME}|" .env 2>/dev/null || true; fi
+    if [ -n "$DB_PASSWORD" ]; then sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env 2>/dev/null || true; fi
+    # Default SSL mode for external hosts
+    DB_SSLMODE_VALUE="${DB_SSLMODE:-require}"
+    sed -i "s|^DB_SSLMODE=.*|DB_SSLMODE=${DB_SSLMODE_VALUE}|" .env 2>/dev/null || true
 fi
 
 # Generate APP_KEY if missing or empty
