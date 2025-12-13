@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     sqlite3 \
     libsqlite3-dev \
-  && docker-php-ext-install pdo pdo_sqlite bcmath
+    libpq-dev \
+  && docker-php-ext-install pdo pdo_pgsql pdo_sqlite bcmath
 
 # Working directory inside container
 WORKDIR /var/www/html
@@ -31,9 +32,13 @@ RUN composer install --optimize-autoloader --no-interaction --no-progress --no-s
 RUN php artisan key:generate --force || true
 RUN php artisan package:discover --ansi || true
 
+# Copy and make entrypoint script executable
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Expose port (for local)
 EXPOSE 8000
 
-# Start Laravel server
-CMD ["sh", "-c", "echo '=== Starting container ===' && mkdir -p database && touch database/database.sqlite && chmod 664 database/database.sqlite && echo 'Database file created' && php artisan migrate --force || echo 'Migration failed' && php artisan db:seed --force || echo 'Seeding failed' && echo 'Starting server on port ${PORT:-8000}' && exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Use entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
 
