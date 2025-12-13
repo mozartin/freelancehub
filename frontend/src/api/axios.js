@@ -1,22 +1,16 @@
 // src/api/axios.js
 import axios from "axios";
 
-// Get API URL from environment variable
+// Resolve API URL, always ensuring it includes /api and no trailing slash duplication
 const getApiUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  
-  // In development, default to localhost
-  if (import.meta.env.DEV) {
-    return apiUrl || "http://127.0.0.1:8000/api";
-  }
-  
-  // In production, require the environment variable
-  if (!apiUrl) {
-    console.error("VITE_API_URL is not set! Please configure it in your deployment platform.");
-    throw new Error("API URL is not configured. Please set VITE_API_URL environment variable.");
-  }
-  
-  return apiUrl;
+  const raw =
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV
+      ? "http://127.0.0.1:8000/api"
+      : "https://freelancehub-o546.onrender.com/api");
+
+  const trimmed = raw.replace(/\/+$/, "");
+  return trimmed.endsWith("/api") ? trimmed : `${trimmed}/api`;
 };
 
 const api = axios.create({
