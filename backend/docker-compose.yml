@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freelancehub-backend
+    ports:
+      - "8001:8000"
+    volumes:
+      # Persist database (create as file if it doesn't exist)
+      - ./database:/var/www/html/database
+      # Persist storage
+      - ./storage:/var/www/html/storage
+      # Persist bootstrap cache
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=sqlite
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - PORT=8000
+    restart: unless-stopped
+    networks:
+      - freelancehub-network
+
+networks:
+  freelancehub-network:
+    driver: bridge
+

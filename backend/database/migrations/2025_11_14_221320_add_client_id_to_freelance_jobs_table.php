@@ -7,19 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('freelance_jobs', function (Blueprint $table) {
-            $table->foreignId('client_id')
-                ->nullable()
-                ->after('id')
-                ->constrained('users')
-                ->nullOnDelete();
-        });
+        if (! Schema::hasColumn('freelance_jobs', 'client_id')) {
+            Schema::table('freelance_jobs', function (Blueprint $table) {
+                $table->foreignId('client_id')
+                    ->nullable()
+                    ->after('id')
+                    ->constrained('users')
+                    ->nullOnDelete();
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::table('freelance_jobs', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('client_id');
-        });
+        if (Schema::hasColumn('freelance_jobs', 'client_id')) {
+            Schema::table('freelance_jobs', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('client_id');
+            });
+        }
     }
 };

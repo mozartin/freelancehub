@@ -1,40 +1,35 @@
 services:
   - type: web
     name: freelancehub-backend
-    env: php
-    buildCommand: |
-      composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-      php artisan key:generate --force || true
-      php artisan package:discover --ansi || true
-    startCommand: |
-      echo "=== Starting deployment ==="
-      mkdir -p database
-      echo "Database directory created"
-      touch database/database.sqlite
-      chmod 664 database/database.sqlite
-      echo "Database file created"
-      echo "Running migrations..."
-      php artisan migrate --force
-      echo "Migrations completed"
-      echo "Checking database state..."
-      php scripts/check-db.php || echo "Database check failed"
-      echo "Running seeders..."
-      php artisan db:seed --force
-      echo "Seeders completed"
-      echo "Verifying seeded data..."
-      php scripts/check-db.php || echo "Final database check failed"
-      echo "Starting server..."
-      php artisan serve --host=0.0.0.0 --port=$PORT
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
+      - key: APP_KEY
+        sync: false   # вставь свой APP_KEY
+      # Postgres (рекомендуется). Замените на значения из Render Postgres.
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql
+      - key: DB_HOST
+        value: postgres.render.internal
+      - key: DB_PORT
+        value: "5432"
       - key: DB_DATABASE
-        value: database/database.sqlite
+        value: freelancehub
+      - key: DB_USERNAME
+        value: freelancehub_user
+      - key: DB_PASSWORD
+        sync: false   # вставь свой пароль
+      # Опционально, фронтенд URL
       - key: FRONTEND_URL
         value: https://freelancehub-tau.vercel.app
+    # Запуск контейнера берётся из Dockerfile/entrypoint.
+    # Миграции/сидеры перед запуском:
+    preDeployCommand: |
+      php artisan migrate --force && php artisan db:seed --force
     healthCheckPath: /api/ping
 
