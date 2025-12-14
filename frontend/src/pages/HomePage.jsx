@@ -75,12 +75,12 @@ export default function HomePage() {
                   {" "}
                   Olena Beliavska
                 </span>{" "}
-                as part of her developer portfolio.
+                showcasing a complete freelance workflow: job postings, proposals, and user profiles.
               </p>
 
               <p className="text-[11px] text-slate-500">
-                Built with React, Tailwind CSS, and Laravel. Designed to
-                demonstrate clean UI, routing, and real API integration.
+                Built with React + Tailwind CSS frontend, Laravel REST API with authentication,
+                client/freelancer dashboards, and seeded sample data for quick exploration.
               </p>
             </div>
           </div>
