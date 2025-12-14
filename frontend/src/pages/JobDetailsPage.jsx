@@ -7,6 +7,7 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { getJobById } from "../api/jobs";
 import { createProposal } from "../api/proposals";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function JobDetailsPage() {
   const { id } = useParams();
@@ -28,6 +29,8 @@ export default function JobDetailsPage() {
   const [applySuccess, setApplySuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const applyFormRef = useRef(null);
+
+  useDocumentTitle(job?.title ? `${job.title}` : "Job details");
 
   useEffect(() => {
 

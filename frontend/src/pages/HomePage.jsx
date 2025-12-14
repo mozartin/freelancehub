@@ -4,11 +4,14 @@ import PageContainer from "../components/layout/PageContainer";
 import Button from "../components/ui/Button";
 import JobCard from "../components/jobs/JobCard";
 import { getJobs } from "../api/jobs";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function HomePage() {
   const [jobs, setJobs] = useState([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [errorJobs, setErrorJobs] = useState("");
+
+  useDocumentTitle("Home");
 
   useEffect(() => {
     const fetchLatestJobs = async () => {

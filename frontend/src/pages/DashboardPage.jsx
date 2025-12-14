@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api/axios";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -55,6 +56,8 @@ export default function DashboardPage() {
     : isFreelancer
     ? "Review your proposals and keep track of opportunities."
     : "Overview of your account.";
+
+  useDocumentTitle(title);
 
   return (
     <PageContainer title={title} subtitle={subtitle}>

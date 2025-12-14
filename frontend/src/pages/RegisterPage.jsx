@@ -6,6 +6,7 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useAuth } from "../auth/AuthContext";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
+
+  useDocumentTitle("Create account");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -3,6 +3,7 @@ import PageContainer from "../components/layout/PageContainer";
 import JobCard from "../components/jobs/JobCard";
 import Button from "../components/ui/Button";
 import { getJobs } from "../api/jobs";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 
 export default function JobsPage() {
@@ -10,6 +11,8 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+
+  useDocumentTitle("Jobs");
 
   useEffect(() => {
     fetchJobs();

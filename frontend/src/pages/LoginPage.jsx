@@ -5,6 +5,7 @@ import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { useAuth } from "../auth/AuthContext";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -14,6 +15,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  useDocumentTitle("Sign in");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

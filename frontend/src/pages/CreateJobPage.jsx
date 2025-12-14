@@ -6,6 +6,7 @@ import Input from "../components/ui/Input";
 import Textarea from "../components/ui/Textarea";
 import Button from "../components/ui/Button";
 import { createJob } from "../api/jobs";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function CreateJobPage() {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export default function CreateJobPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  useDocumentTitle("Post a job");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
