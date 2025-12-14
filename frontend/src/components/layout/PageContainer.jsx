@@ -1,24 +1,20 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
 
 export default function PageContainer({ title, subtitle, children }) {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("auth_token");
 
   const handleLogout = async () => {
-    const token = localStorage.getItem("auth_token");
-
-    if (token) {
-      await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+    try {
+      await api.post("/logout");
+    } catch (e) {
+      // Ignore network/CORS issues; still clear local state
+      console.warn("Logout request failed, clearing local session", e);
+    } finally {
+      localStorage.removeItem("auth_token");
+      navigate("/login");
     }
-
-    localStorage.removeItem("auth_token");
-    navigate("/login");
   };
 
   return (
