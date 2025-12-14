@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\FreelancerProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -39,6 +40,22 @@ class UserController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
+
+        // If created as freelancer, ensure a profile exists
+        if ($user->role === 'freelancer') {
+            FreelancerProfile::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'title' => null,
+                    'skills' => null,
+                    'hourly_rate' => null,
+                    'experience_level' => null,
+                    'website_url' => null,
+                    'github_url' => null,
+                    'linkedin_url' => null,
+                ]
+            );
+        }
 
         return response()->json($user, 201);
     }

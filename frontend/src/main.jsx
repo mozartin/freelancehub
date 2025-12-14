@@ -8,6 +8,7 @@ import CreateJobPage from "./pages/CreateJobPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import FreelancersPage from "./pages/FreelancersPage";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -36,6 +37,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/jobs/:id" element={<JobDetailsPage />} />
           <Route path="/jobs/new" element={<CreateJobPage />} />
+          <Route path="/freelancers" element={<FreelancersPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

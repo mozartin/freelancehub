@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\FreelancerProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,6 +26,22 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
         ]);
+
+        // Auto-create a blank freelancer profile so it appears in listings
+        if ($user->role === 'freelancer') {
+            FreelancerProfile::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'title' => null,
+                    'skills' => null,
+                    'hourly_rate' => null,
+                    'experience_level' => null,
+                    'website_url' => null,
+                    'github_url' => null,
+                    'linkedin_url' => null,
+                ]
+            );
+        }
 
         $token = $user->createToken('api-token')->plainTextToken;
 

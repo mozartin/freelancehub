@@ -6,7 +6,7 @@ const getApiUrl = () => {
   const raw =
     import.meta.env.VITE_API_URL ||
     (import.meta.env.DEV
-      ? "http://127.0.0.1:8000/api"
+      ? "http://127.0.0.1:8001/api"
       : "https://freelancehub-o546.onrender.com/api");
 
   const trimmed = raw.replace(/\/+$/, "");

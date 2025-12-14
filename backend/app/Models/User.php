@@ -50,6 +50,28 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            if ($user->role !== 'freelancer') {
+                return;
+            }
+
+            FreelancerProfile::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'title' => null,
+                    'skills' => null,
+                    'hourly_rate' => null,
+                    'experience_level' => null,
+                    'website_url' => null,
+                    'github_url' => null,
+                    'linkedin_url' => null,
+                ]
+            );
+        });
+    }
+
     public function freelancerProfile()
     {
         return $this->hasOne(FreelancerProfile::class);

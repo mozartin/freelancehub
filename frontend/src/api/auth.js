@@ -18,6 +18,6 @@ export async function logoutRequest() {
 
 // Register
 export async function registerRequest(payload) {
-  const response = await api.post("/users", payload);
+  const response = await api.post("/register", payload);
   return response.data;
 }
