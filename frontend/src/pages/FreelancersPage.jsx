@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -220,6 +221,14 @@ function FreelancerCard({ profile }) {
         {profile.user?.email && (
           <span className="block">Email: {profile.user.email}</span>
         )}
+      </div>
+
+      <div className="pt-2">
+        <Link to={`/freelancers/${profile.id}`}>
+          <Button variant="outline" size="sm">
+            View profile
+          </Button>
+        </Link>
       </div>
     </Card>
   );

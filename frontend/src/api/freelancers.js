@@ -30,3 +30,23 @@ export async function getFreelancers(page = 1) {
   return { items: [], meta: null };
 }
 
+export async function getFreelancerProfile(id) {
+  const response = await api.get(`/freelancer-profiles/${id}`);
+  return response.data;
+}
+
+export async function getFreelancerProfileByUser(userId) {
+  const response = await api.get(`/freelancer-profiles/user/${userId}`);
+  return response.data;
+}
+
+export async function updateFreelancerProfile(id, payload) {
+  const response = await api.put(`/freelancer-profiles/${id}`, payload);
+  return response.data;
+}
+
+export async function createFreelancerProfile(payload) {
+  const response = await api.post(`/freelancer-profiles`, payload);
+  return response.data;
+}
+

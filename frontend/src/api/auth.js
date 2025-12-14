@@ -21,3 +21,9 @@ export async function registerRequest(payload) {
   const response = await api.post("/register", payload);
   return response.data;
 }
+
+// Current user
+export async function meRequest() {
+  const response = await api.get("/me");
+  return response.data;
+}

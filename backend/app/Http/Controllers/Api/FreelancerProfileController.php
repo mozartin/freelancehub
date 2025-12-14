@@ -23,6 +23,32 @@ class FreelancerProfileController extends Controller
         return FreelancerProfile::with('user')->findOrFail($id);
     }
 
+    // GET /api/freelancer-profiles/user/{userId}
+    public function showByUser($userId)
+    {
+        // Ensure the user exists
+        $user = User::findOrFail($userId);
+
+        $profile = FreelancerProfile::with('user')
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$profile) {
+            $profile = FreelancerProfile::create([
+                'user_id' => $user->id,
+                'title' => null,
+                'skills' => null,
+                'hourly_rate' => null,
+                'experience_level' => null,
+                'website_url' => null,
+                'github_url' => null,
+                'linkedin_url' => null,
+            ])->load('user');
+        }
+
+        return $profile;
+    }
+
     // POST /api/freelancer-profiles
     public function store(Request $request)
     {
@@ -37,13 +63,24 @@ class FreelancerProfileController extends Controller
             'linkedin_url' => 'nullable|url',
         ]);
 
-        // (optional) check that user is a freelancer
-        // $user = User::findOrFail($data['user_id']);
-        // if ($user->role !== 'freelancer') { ... }
+        // Prefer authenticated user id if available to avoid spoofing
+        $userId = $request->user()?->id ?? $data['user_id'];
 
-        $profile = FreelancerProfile::create($data);
+        // Upsert single profile per user_id
+        $profile = FreelancerProfile::firstOrNew(['user_id' => $userId]);
+        $profile->fill([
+            'title' => $data['title'] ?? null,
+            'skills' => $data['skills'] ?? null,
+            'hourly_rate' => $data['hourly_rate'] ?? null,
+            'experience_level' => $data['experience_level'] ?? null,
+            'website_url' => $data['website_url'] ?? null,
+            'github_url' => $data['github_url'] ?? null,
+            'linkedin_url' => $data['linkedin_url'] ?? null,
+        ]);
+        $profile->user_id = $userId;
+        $profile->save();
 
-        return response()->json($profile->load('user'), 201);
+        return response()->json($profile->load('user'), $profile->wasRecentlyCreated ? 201 : 200);
     }
 
     // PUT /api/freelancer-profiles/{id}

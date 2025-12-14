@@ -24,7 +24,11 @@ Route::get('/jobs/{id}', [JobController::class, 'show']);
 
 // FreelancerProfiles CRUD 
 Route::get('/freelancer-profiles', [FreelancerProfileController::class, 'index']);
-Route::get('/freelancer-profiles/{id}', [FreelancerProfileController::class, 'show']);
+// Specific user profile first to avoid clashing with the {id} route
+Route::get('/freelancer-profiles/user/{id}', [FreelancerProfileController::class, 'showByUser'])
+    ->whereNumber('id');
+Route::get('/freelancer-profiles/{id}', [FreelancerProfileController::class, 'show'])
+    ->whereNumber('id');
 Route::post('/freelancer-profiles', [FreelancerProfileController::class, 'store']);
 Route::put('/freelancer-profiles/{id}', [FreelancerProfileController::class, 'update']);
 Route::delete('/freelancer-profiles/{id}', [FreelancerProfileController::class, 'destroy']);
