@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 import { useAuth } from "../../auth/AuthContext";
@@ -14,7 +14,10 @@ export default function JobCard({
   createdAt,
 }) {
   const { user, isAuthenticated } = useAuth();
-  const canApply = isAuthenticated && user?.role === "freelancer";
+  const isFreelancer = user?.role === "freelancer";
+  const isClient = user?.role === "client";
+  const canApply = isAuthenticated && isFreelancer;
+  const navigate = useNavigate();
 
   return (
     <Card className="flex flex-col gap-4">
@@ -74,12 +77,24 @@ export default function JobCard({
               View details
             </Link>
           )}
-          {id && canApply && (
-            <Link to={`/jobs/${id}?apply=1`}>
-              <Button variant="outline" className="text-xs px-3 py-1.5">
-                Apply
-              </Button>
-            </Link>
+          {id && (
+            <Button
+              variant="outline"
+              className="text-xs px-3 py-1.5"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/register?role=freelancer");
+                  return;
+                }
+                if (!isFreelancer) {
+                  return;
+                }
+                navigate(`/jobs/${id}?apply=1`);
+              }}
+              disabled={isClient}
+            >
+              {isClient ? "Clients cannot apply" : "Apply"}
+            </Button>
           )}
         </div>
       </div>

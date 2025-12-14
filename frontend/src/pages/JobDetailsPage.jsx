@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
+import { useParams, Link, useSearchParams, useNavigate } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
 import Card from "../components/ui/Card";
 import Textarea from "../components/ui/Textarea";
@@ -11,6 +11,7 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useAuth } from "../auth/AuthContext";
 
 export default function JobDetailsPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   
@@ -31,7 +32,9 @@ export default function JobDetailsPage() {
   const [submitting, setSubmitting] = useState(false);
   const applyFormRef = useRef(null);
   const { user, isAuthenticated } = useAuth();
-  const canApply = isAuthenticated && user?.role === "freelancer";
+  const isFreelancer = user?.role === "freelancer";
+  const isClient = user?.role === "client";
+  const canApply = isAuthenticated && isFreelancer;
 
   useDocumentTitle(job?.title ? `${job.title}` : "Job details");
 
@@ -221,22 +224,26 @@ export default function JobDetailsPage() {
                 : "Posted recently"}
             </span>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              {!canApply && (
-                <span className="text-[11px] text-slate-500">
-                  {!isAuthenticated
-                    ? "Log in as a freelancer to apply."
-                    : "Clients cannot apply to jobs."}
-                </span>
-              )}
               <Button
-                onClick={() => canApply && setShowApplyForm((prev) => !prev)}
-                disabled={!canApply}
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    navigate("/register?role=freelancer");
+                    return;
+                  }
+                  if (!isFreelancer) {
+                    return;
+                  }
+                  setShowApplyForm((prev) => !prev);
+                }}
+                disabled={isClient}
               >
                 {showApplyForm
                   ? "Cancel"
-                  : canApply
+                  : !isAuthenticated
                   ? "Apply for this job"
-                  : "Apply (freelancers only)"}
+                  : isFreelancer
+                  ? "Apply for this job"
+                  : "Clients cannot apply"}
               </Button>
             </div>
           </div>

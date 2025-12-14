@@ -1,6 +1,6 @@
 // src/pages/RegisterPage.jsx
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
@@ -11,10 +11,14 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const [searchParams] = useSearchParams();
+
+  const initialRole =
+    searchParams.get("role") === "freelancer" ? "freelancer" : "client";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("client");
+  const [role, setRole] = useState(initialRole);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [submitting, setSubmitting] = useState(false);
