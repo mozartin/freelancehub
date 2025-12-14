@@ -8,6 +8,7 @@ import Button from "../components/ui/Button";
 import { getJobById } from "../api/jobs";
 import { createProposal } from "../api/proposals";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import { useAuth } from "../auth/AuthContext";
 
 export default function JobDetailsPage() {
   const { id } = useParams();
@@ -29,6 +30,8 @@ export default function JobDetailsPage() {
   const [applySuccess, setApplySuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const applyFormRef = useRef(null);
+  const { user, isAuthenticated } = useAuth();
+  const canApply = isAuthenticated && user?.role === "freelancer";
 
   useDocumentTitle(job?.title ? `${job.title}` : "Job details");
 
@@ -48,19 +51,21 @@ export default function JobDetailsPage() {
         setError("Failed to load job details. Please try again.");
       } finally {
         setLoading(false);
-        if (searchParams.get("apply") === "1") {
+        if (searchParams.get("apply") === "1" && canApply) {
           setTimeout(() => {
             applyFormRef.current?.scrollIntoView({
               behavior: "smooth",
               block: "start",
             });
           }, 150);
+        } else if (searchParams.get("apply") === "1" && !canApply) {
+          setShowApplyForm(false);
         }
       }
     };
 
     fetchJob();
-  }, [id]);
+  }, [id, canApply]);
 
   const handleApplyChange = (e) => {
     const { name, value } = e.target;
@@ -74,6 +79,15 @@ export default function JobDetailsPage() {
     e.preventDefault();
     setApplyError("");
     setApplySuccess("");
+
+    if (!canApply) {
+      setApplyError(
+        !isAuthenticated
+          ? "Please log in as a freelancer to apply."
+          : "Only freelancers can apply to jobs."
+      );
+      return;
+    }
 
     if (!applyForm.cover_letter.trim()) {
       setApplyError("Please write a short cover letter.");
@@ -200,20 +214,36 @@ export default function JobDetailsPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-slate-100">
             <span className="text-xs text-slate-400">
               {job.created_at
                 ? `Posted on ${new Date(job.created_at).toLocaleDateString()}`
                 : "Posted recently"}
             </span>
-            <Button onClick={() => setShowApplyForm((prev) => !prev)}>
-              {showApplyForm ? "Cancel" : "Apply for this job"}
-            </Button>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              {!canApply && (
+                <span className="text-[11px] text-slate-500">
+                  {!isAuthenticated
+                    ? "Log in as a freelancer to apply."
+                    : "Clients cannot apply to jobs."}
+                </span>
+              )}
+              <Button
+                onClick={() => canApply && setShowApplyForm((prev) => !prev)}
+                disabled={!canApply}
+              >
+                {showApplyForm
+                  ? "Cancel"
+                  : canApply
+                  ? "Apply for this job"
+                  : "Apply (freelancers only)"}
+              </Button>
+            </div>
           </div>
         </Card>
 
         {/* Apply form */}
-        {showApplyForm && (
+        {showApplyForm && canApply && (
           <div ref={applyFormRef}>
             <Card className="max-w-2xl">
               <h3 className="text-sm font-semibold text-slate-900 mb-3">

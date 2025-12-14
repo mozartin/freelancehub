@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function JobCard({
   id,
@@ -12,6 +13,9 @@ export default function JobCard({
   skills = [],
   createdAt,
 }) {
+  const { user, isAuthenticated } = useAuth();
+  const canApply = isAuthenticated && user?.role === "freelancer";
+
   return (
     <Card className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
@@ -70,7 +74,7 @@ export default function JobCard({
               View details
             </Link>
           )}
-          {id && (
+          {id && canApply && (
             <Link to={`/jobs/${id}?apply=1`}>
               <Button variant="outline" className="text-xs px-3 py-1.5">
                 Apply
