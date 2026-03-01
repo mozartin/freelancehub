@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::get('/me', [AuthController::class, 'me']);
    Route::post('/logout', [AuthController::class, 'logout']);
 
-   // 👉 CREATE/UPDATE/DELETE JOBS — ONLY FOR AUTHENTICATED USERS
+   // CREATE/UPDATE/DELETE JOBS — ONLY FOR AUTHENTICATED USERS
    Route::post('/jobs', [JobController::class, 'store']);
    Route::put('/jobs/{id}', [JobController::class, 'update']);
    Route::delete('/jobs/{id}', [JobController::class, 'destroy']);

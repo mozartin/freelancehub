@@ -48,7 +48,7 @@ export default function RegisterPage() {
       await register({
         name,
         email,
-        role, // 🔥 send role to backend
+        role,
         password,
         password_confirmation: passwordConfirmation,
       });

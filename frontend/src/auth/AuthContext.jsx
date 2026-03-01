@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // 🔥 If token exists — consider user authenticated
+  // If token exists — consider user authenticated
   const isAuthenticated = !!localStorage.getItem("auth_token");
 
   return (

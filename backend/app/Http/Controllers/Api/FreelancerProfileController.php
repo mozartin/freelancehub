@@ -9,6 +9,24 @@ use Illuminate\Http\Request;
 
 class FreelancerProfileController extends Controller
 {
+    /**
+     * Normalize a URL: prepend https:// if the user omitted the scheme.
+     */
+    private function normalizeUrl(?string $value): ?string
+    {
+        if ($value === null || trim($value) === '') {
+            return null;
+        }
+
+        $value = trim($value);
+
+        // If no scheme at all, prepend https://
+        if (!preg_match('#^https?://#i', $value)) {
+            $value = 'https://' . $value;
+        }
+
+        return $value;
+    }
     // GET /api/freelancer-profiles
     public function index()
     {
@@ -52,6 +70,13 @@ class FreelancerProfileController extends Controller
     // POST /api/freelancer-profiles
     public function store(Request $request)
     {
+        // Normalize URLs before validation so users don't have to type https://
+        $request->merge([
+            'website_url' => $this->normalizeUrl($request->input('website_url')),
+            'github_url' => $this->normalizeUrl($request->input('github_url')),
+            'linkedin_url' => $this->normalizeUrl($request->input('linkedin_url')),
+        ]);
+
         $data = $request->validate([
             'user_id' => 'required|exists:users,id',
             'title' => 'nullable|string|max:255',
@@ -87,6 +112,13 @@ class FreelancerProfileController extends Controller
     public function update(Request $request, $id)
     {
         $profile = FreelancerProfile::findOrFail($id);
+
+        // Normalize URLs before validation so users don't have to type https://
+        $request->merge([
+            'website_url' => $this->normalizeUrl($request->input('website_url')),
+            'github_url' => $this->normalizeUrl($request->input('github_url')),
+            'linkedin_url' => $this->normalizeUrl($request->input('linkedin_url')),
+        ]);
 
         $data = $request->validate([
             'title' => 'nullable|string|max:255',

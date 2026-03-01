@@ -14,14 +14,12 @@ import FreelancerProfileEditPage from "./pages/FreelancerProfileEditPage";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-// 👇 add these two imports
 import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      {/* 👇 wrap entire app in AuthProvider */}
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
