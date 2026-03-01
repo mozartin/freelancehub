@@ -1,4 +1,3 @@
-// src/pages/RegisterPage.jsx
 import { useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import PageContainer from "../components/layout/PageContainer";
@@ -56,7 +55,6 @@ export default function RegisterPage() {
       navigate("/login");
     } catch (err) {
       console.error("REGISTER ERROR:", err);
-      console.log("VALIDATION:", err.validation);
 
       if (err.validation) {
         setFieldErrors(err.validation);
@@ -71,33 +69,37 @@ export default function RegisterPage() {
   };
 
   return (
-    <PageContainer
-      title="Create your FreelanceHub account"
-      subtitle="Join as a client or freelancer and start using the platform."
-    >
-      <div className="max-w-md mx-auto">
-        <div className="mb-4">
+    <PageContainer>
+      <div className="max-w-md mx-auto pt-4 sm:pt-8">
+        <div className="mb-6">
           <Link
             to="/"
-            className="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+            className="text-sm text-slate-500 hover:text-indigo-600 inline-flex items-center gap-1.5 transition-colors"
           >
-            <span>←</span>
-            <span>Back to home</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            Back to home
           </Link>
         </div>
 
-        <Card className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">
-              Create account
-            </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Fill in your details to get started.
-            </p>
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25 mb-4">
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+            </svg>
           </div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Join FreelanceHub
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Create your account as a client or freelancer.
+          </p>
+        </div>
 
+        <Card>
           {(errorMessage || Object.keys(fieldErrors).length > 0) && (
-            <div className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-md px-3 py-2 space-y-1">
+            <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 space-y-1">
               {errorMessage && <p>{errorMessage}</p>}
               {fieldErrors.name && <p>Name: {fieldErrors.name[0]}</p>}
               {fieldErrors.email && <p>Email: {fieldErrors.email[0]}</p>}
@@ -108,7 +110,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Name"
               type="text"
@@ -127,19 +129,39 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            {/* role selection */}
+            {/* Role selection */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Register as
+              <label className="block text-sm font-medium text-slate-700 mb-1.5 tracking-tight">
+                I want to
               </label>
-              <select
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="client">Client</option>
-                <option value="freelancer">Freelancer</option>
-              </select>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole("client")}
+                  className={`rounded-xl border-2 px-4 py-3 text-sm font-medium text-center transition-all duration-200 cursor-pointer ${
+                    role === "client"
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                  }`}
+                >
+                  <div className="text-lg mb-1">💼</div>
+                  Hire talent
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-normal">Client</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("freelancer")}
+                  className={`rounded-xl border-2 px-4 py-3 text-sm font-medium text-center transition-all duration-200 cursor-pointer ${
+                    role === "freelancer"
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                  }`}
+                >
+                  <div className="text-lg mb-1">🚀</div>
+                  Find work
+                  <div className="text-[11px] text-slate-400 mt-0.5 font-normal">Freelancer</div>
+                </button>
+              </div>
             </div>
 
             <Input
@@ -149,6 +171,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              helperText="At least 6 characters."
             />
 
             <Input
@@ -160,18 +183,22 @@ export default function RegisterPage() {
               onChange={(e) => setPasswordConfirmation(e.target.value)}
             />
 
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[11px] text-slate-400">
-                Password must be at least 6 characters.
-              </span>
-            </div>
-
             <div className="pt-2">
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting ? "Creating account..." : "Create account"}
               </Button>
             </div>
           </form>
+
+          <p className="text-center text-sm text-slate-500 mt-5 pt-4 border-t border-slate-100">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-indigo-600 font-medium hover:text-indigo-700 transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
         </Card>
       </div>
     </PageContainer>

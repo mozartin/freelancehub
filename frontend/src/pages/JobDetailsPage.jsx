@@ -14,13 +14,13 @@ export default function JobDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  
+
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const [showApplyForm, setShowApplyForm] = useState(() => {
-      return searchParams.get("apply") === "1";
+    return searchParams.get("apply") === "1";
   });
   const [applyForm, setApplyForm] = useState({
     cover_letter: "",
@@ -39,14 +39,12 @@ export default function JobDetailsPage() {
   useDocumentTitle(job?.title ? `${job.title}` : "Job details");
 
   useEffect(() => {
-
     if (!id) return;
 
     const fetchJob = async () => {
       try {
         setLoading(true);
         setError("");
-
         const data = await getJobById(id);
         setJob(data);
       } catch (err) {
@@ -72,10 +70,7 @@ export default function JobDetailsPage() {
 
   const handleApplyChange = (e) => {
     const { name, value } = e.target;
-    setApplyForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setApplyForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitProposal = async (e) => {
@@ -99,25 +94,15 @@ export default function JobDetailsPage() {
 
     try {
       setSubmitting(true);
-
       const payload = {
         cover_letter: applyForm.cover_letter,
-        proposed_budget: applyForm.proposed_budget
-          ? Number(applyForm.proposed_budget)
-          : null,
-        estimated_days: applyForm.estimated_days
-          ? Number(applyForm.estimated_days)
-          : null,
+        proposed_budget: applyForm.proposed_budget ? Number(applyForm.proposed_budget) : null,
+        estimated_days: applyForm.estimated_days ? Number(applyForm.estimated_days) : null,
       };
 
       await createProposal(id, payload);
-
       setApplySuccess("Your proposal has been submitted.");
-      setApplyForm({
-        cover_letter: "",
-        proposed_budget: "",
-        estimated_days: "",
-      });
+      setApplyForm({ cover_letter: "", proposed_budget: "", estimated_days: "" });
       setShowApplyForm(false);
     } catch (err) {
       console.error(err);
@@ -129,48 +114,51 @@ export default function JobDetailsPage() {
 
   const renderContent = () => {
     if (loading) {
-      return <p className="text-sm text-slate-500">Loading job...</p>;
+      return (
+        <div className="flex items-center gap-2 text-sm text-slate-500 py-8">
+          <svg className="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          Loading job...
+        </div>
+      );
     }
 
-    if (error) {
-      return <p className="text-sm text-red-500">{error}</p>;
-    }
-
-    if (!job) {
-      return <p className="text-sm text-slate-500">Job not found.</p>;
-    }
+    if (error) return <p className="text-sm text-red-500">{error}</p>;
+    if (!job) return <p className="text-sm text-slate-500">Job not found.</p>;
 
     const skills =
       typeof job.skills === "string"
-        ? job.skills
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
+        ? job.skills.split(",").map((s) => s.trim()).filter(Boolean)
         : job.skills || [];
 
     const budgetLabel =
       job.budget_min && job.budget_max
-        ? `${job.budget_min}–${job.budget_max} ${
-            job.budget_type === "hourly" ? "€/h" : "€"
-          }`
+        ? `${job.budget_min}–${job.budget_max} ${job.budget_type === "hourly" ? "€/h" : "€"}`
         : null;
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-3xl">
         {/* Main job card */}
-        <Card className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <Card className="space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 {job.title}
               </h2>
-              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span>{job.company || job.client_name || "Client"}</span>
-                <span>•</span>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <span className="inline-flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21" />
+                  </svg>
+                  {job.company || job.client_name || "Client"}
+                </span>
+                <span className="text-slate-300">•</span>
                 <span>{job.location || "Remote"}</span>
                 {job.status && (
                   <>
-                    <span>•</span>
+                    <span className="text-slate-300">•</span>
                     <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 border border-emerald-100">
                       {job.status}
                     </span>
@@ -180,26 +168,19 @@ export default function JobDetailsPage() {
             </div>
 
             {budgetLabel && (
-              <div className="text-right">
-                <div className="text-sm font-semibold text-slate-900">
-                  {budgetLabel}
-                </div>
+              <div className="text-right shrink-0 bg-slate-50 rounded-xl px-4 py-3">
+                <div className="text-lg font-bold text-slate-900">{budgetLabel}</div>
                 <div className="text-xs text-slate-500">
-                  {job.budget_type === "hourly"
-                    ? "Hourly rate"
-                    : "Fixed budget"}
+                  {job.budget_type === "hourly" ? "Hourly rate" : "Fixed budget"}
                 </div>
               </div>
             )}
           </div>
 
           {skills.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="flex flex-wrap gap-1.5">
               {skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-700"
-                >
+                <span key={skill} className="skill-tag rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600">
                   {skill}
                 </span>
               ))}
@@ -207,8 +188,8 @@ export default function JobDetailsPage() {
           )}
 
           {job.description && (
-            <div className="pt-2 border-t border-slate-100">
-              <h3 className="text-sm font-semibold text-slate-900 mb-1.5">
+            <div className="pt-4 border-t border-slate-100">
+              <h3 className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">
                 Description
               </h3>
               <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
@@ -217,91 +198,89 @@ export default function JobDetailsPage() {
             </div>
           )}
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-slate-100">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-slate-100">
             <span className="text-xs text-slate-400">
               {job.created_at
                 ? `Posted on ${new Date(job.created_at).toLocaleDateString()}`
                 : "Posted recently"}
             </span>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <Button
-                onClick={() => {
-                  if (!isAuthenticated) {
-                    navigate("/register?role=freelancer");
-                    return;
-                  }
-                  if (!isFreelancer) {
-                    return;
-                  }
-                  setShowApplyForm((prev) => !prev);
-                }}
-                disabled={isClient}
-              >
-                {showApplyForm
-                  ? "Cancel"
-                  : !isAuthenticated
-                  ? "Apply for this job"
-                  : isFreelancer
-                  ? "Apply for this job"
-                  : "Clients cannot apply"}
-              </Button>
-            </div>
+            <Button
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/register?role=freelancer");
+                  return;
+                }
+                if (!isFreelancer) return;
+                setShowApplyForm((prev) => !prev);
+              }}
+              disabled={isClient}
+            >
+              {showApplyForm
+                ? "Cancel"
+                : !isAuthenticated
+                ? "Apply for this job"
+                : isFreelancer
+                ? "Apply for this job"
+                : "Clients cannot apply"}
+            </Button>
           </div>
         </Card>
 
         {/* Apply form */}
         {showApplyForm && canApply && (
           <div ref={applyFormRef}>
-            <Card className="max-w-2xl">
-              <h3 className="text-sm font-semibold text-slate-900 mb-3">
+            <Card>
+              <h3 className="text-sm font-bold text-slate-900 mb-4">
                 Submit your proposal
               </h3>
 
               {applyError && (
-                <p className="text-sm text-red-500 mb-2">{applyError}</p>
+                <div className="mb-3 flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                  {applyError}
+                </div>
               )}
               {applySuccess && (
-                <p className="text-sm text-emerald-600 mb-2">{applySuccess}</p>
+                <div className="mb-3 flex items-start gap-2 text-sm text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
+                  {applySuccess}
+                </div>
               )}
 
-              <form onSubmit={handleSubmitProposal} className="space-y-3">
+              <form onSubmit={handleSubmitProposal} className="space-y-4">
                 <Textarea
                   label="Cover letter"
                   name="cover_letter"
                   value={applyForm.cover_letter}
                   onChange={handleApplyChange}
                   rows={5}
-                  placeholder="Briefly explain why you’re a good fit for this job..."
+                  placeholder="Briefly explain why you're a good fit for this job..."
                 />
 
-                <Input
-                  label="Proposed budget (optional)"
-                  name="proposed_budget"
-                  type="number"
-                  min="0"
-                  value={applyForm.proposed_budget}
-                  onChange={handleApplyChange}
-                  placeholder="e.g. 1200"
-                  helperText="Total amount you propose for this project."
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Proposed budget (optional)"
+                    name="proposed_budget"
+                    type="number"
+                    min="0"
+                    value={applyForm.proposed_budget}
+                    onChange={handleApplyChange}
+                    placeholder="e.g. 1200"
+                    helperText="Total amount you propose."
+                  />
 
-                <Input
-                  label="Estimated days to complete (optional)"
-                  name="estimated_days"
-                  type="number"
-                  min="1"
-                  value={applyForm.estimated_days}
-                  onChange={handleApplyChange}
-                  placeholder="e.g. 7"
-                  helperText="Rough estimate of how many days you need."
-                />
+                  <Input
+                    label="Estimated days (optional)"
+                    name="estimated_days"
+                    type="number"
+                    min="1"
+                    value={applyForm.estimated_days}
+                    onChange={handleApplyChange}
+                    placeholder="e.g. 7"
+                    helperText="Rough estimate."
+                  />
+                </div>
 
-                <div className="pt-2 flex items-center justify-end gap-3">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setShowApplyForm(false)}
-                  >
+                <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                  <Button type="button" variant="ghost" onClick={() => setShowApplyForm(false)}>
                     Cancel
                   </Button>
                   <Button type="submit" disabled={submitting}>
@@ -317,17 +296,16 @@ export default function JobDetailsPage() {
   };
 
   return (
-    <PageContainer
-      title="Job details"
-      subtitle="View the full description and requirements for this role."
-    >
-      <div className="mb-4">
+    <PageContainer>
+      <div className="mb-6">
         <Link
           to="/jobs"
-          className="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+          className="text-sm text-slate-500 hover:text-indigo-600 inline-flex items-center gap-1.5 transition-colors"
         >
-          <span>←</span>
-          <span>Back to jobs</span>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          Back to jobs
         </Link>
       </div>
 

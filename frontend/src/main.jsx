@@ -36,7 +36,14 @@ createRoot(document.getElementById("root")).render(
           <Route path="/" element={<HomePage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/jobs/:id" element={<JobDetailsPage />} />
-          <Route path="/jobs/new" element={<CreateJobPage />} />
+          <Route
+            path="/jobs/new"
+            element={
+              <ProtectedRoute>
+                <CreateJobPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/freelancers" element={<FreelancersPage />} />
           <Route path="/freelancers/:id" element={<FreelancerProfilePage />} />
           <Route

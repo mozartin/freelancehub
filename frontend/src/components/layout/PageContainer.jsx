@@ -11,7 +11,6 @@ export default function PageContainer({ title, subtitle, children }) {
     try {
       await api.post("/logout");
     } catch (e) {
-      // Ignore network/CORS issues; still clear local state
       console.warn("Logout request failed, clearing local session", e);
     } finally {
       localStorage.removeItem("auth_token");
@@ -24,83 +23,73 @@ export default function PageContainer({ title, subtitle, children }) {
     setIsMobileMenuOpen(false);
   };
 
+  const navLinkClass = ({ isActive }) =>
+    `relative px-1 py-1 transition-colors duration-200 ${
+      isActive
+        ? "text-indigo-600 font-semibold"
+        : "text-slate-500 hover:text-slate-900"
+    }`;
+
+  const mobileNavLinkClass = ({ isActive }) =>
+    `block px-4 py-2.5 rounded-xl text-sm transition-all duration-200 ${
+      isActive
+        ? "text-indigo-600 font-semibold bg-indigo-50"
+        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+    }`;
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white relative">
-        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="sticky top-0 z-30 glass border-b border-slate-200/60">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between">
+          {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 hover:opacity-90 transition"
+            className="flex items-center gap-2.5 hover:opacity-90 transition group"
             onClick={closeMobileMenu}
           >
-            <div className="h-8 w-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-semibold">
-              FH
-            </div>
-            <span className="font-semibold text-slate-900">FreelanceHub</span>
+            <img
+              src="/favicon.svg"
+              alt="FreelanceHub"
+              className="h-9 w-9 transition-transform group-hover:scale-105"
+            />
+            <span className="font-bold text-lg text-slate-900 tracking-tight">
+              Freelance<span className="text-indigo-600">Hub</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden sm:flex items-center gap-4 text-sm text-slate-600">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-600 font-semibold"
-                  : "hover:text-slate-900"
-              }
-            >
+          <nav className="hidden sm:flex items-center gap-6 text-sm">
+            <NavLink to="/" className={navLinkClass}>
               Home
             </NavLink>
-
-            <NavLink
-              to="/jobs"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-600 font-semibold"
-                  : "hover:text-slate-900"
-              }
-            >
+            <NavLink to="/jobs" className={navLinkClass}>
               Jobs
             </NavLink>
-
-            <NavLink
-              to="/freelancers"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-600 font-semibold"
-                  : "hover:text-slate-900"
-              }
-            >
+            <NavLink to="/freelancers" className={navLinkClass}>
               Freelancers
             </NavLink>
-
             {isLoggedIn && (
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-indigo-600 font-semibold"
-                    : "hover:text-slate-900"
-                }
-              >
+              <NavLink to="/dashboard" className={navLinkClass}>
                 Dashboard
               </NavLink>
             )}
+
+            <div className="w-px h-5 bg-slate-200 mx-1" />
 
             {!isLoggedIn && (
               <>
                 <NavLink
                   to="/login"
-                  className="ml-4 px-3 py-1.5 rounded-md bg-slate-200 text-slate-800 text-xs font-medium hover:bg-slate-300 transition"
+                  className="px-4 py-2 rounded-xl text-slate-700 text-sm font-medium hover:bg-slate-100 transition-all duration-200"
                 >
-                  Login
+                  Sign in
                 </NavLink>
-
                 <NavLink
                   to="/register"
-                  className="px-3 py-1.5 rounded-md bg-indigo-500 text-white text-xs font-medium hover:bg-indigo-600 transition"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-200"
                 >
-                  Create account
+                  Get started
                 </NavLink>
               </>
             )}
@@ -108,9 +97,9 @@ export default function PageContainer({ title, subtitle, children }) {
             {isLoggedIn && (
               <button
                 onClick={handleLogout}
-                className="ml-4 px-3 py-1.5 rounded-md bg-red-500 text-white text-xs font-medium hover:bg-red-600 transition"
+                className="px-4 py-2 rounded-xl text-slate-500 text-sm font-medium hover:text-red-600 hover:bg-red-50 transition-all duration-200"
               >
-                Logout
+                Sign out
               </button>
             )}
           </nav>
@@ -118,31 +107,15 @@ export default function PageContainer({ title, subtitle, children }) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="sm:hidden p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+            className="sm:hidden p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="w-5 h-5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="w-5 h-5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
@@ -152,122 +125,93 @@ export default function PageContainer({ title, subtitle, children }) {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 sm:hidden"
               onClick={closeMobileMenu}
             />
-            {/* Menu */}
-            <nav className="absolute top-full left-0 right-0 bg-white border-b border-slate-200 shadow-lg z-50 sm:hidden">
-              <div className="px-4 py-3 space-y-1">
-                <NavLink
-                  to="/"
-                  onClick={closeMobileMenu}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 rounded-md text-sm transition ${
-                      isActive
-                        ? "text-indigo-600 font-semibold bg-indigo-50"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                    }`
-                  }
-                >
+            <nav className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-slate-200 shadow-xl z-50 sm:hidden">
+              <div className="px-3 py-4 space-y-1">
+                <NavLink to="/" onClick={closeMobileMenu} className={mobileNavLinkClass}>
                   Home
                 </NavLink>
-
-                <NavLink
-                  to="/jobs"
-                  onClick={closeMobileMenu}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 rounded-md text-sm transition ${
-                      isActive
-                        ? "text-indigo-600 font-semibold bg-indigo-50"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                    }`
-                  }
-                >
+                <NavLink to="/jobs" onClick={closeMobileMenu} className={mobileNavLinkClass}>
                   Jobs
                 </NavLink>
-
-                <NavLink
-                  to="/freelancers"
-                  onClick={closeMobileMenu}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 rounded-md text-sm transition ${
-                      isActive
-                        ? "text-indigo-600 font-semibold bg-indigo-50"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                    }`
-                  }
-                >
+                <NavLink to="/freelancers" onClick={closeMobileMenu} className={mobileNavLinkClass}>
                   Freelancers
                 </NavLink>
-
                 {isLoggedIn && (
-                  <NavLink
-                    to="/dashboard"
-                    onClick={closeMobileMenu}
-                    className={({ isActive }) =>
-                      `block px-3 py-2 rounded-md text-sm transition ${
-                        isActive
-                          ? "text-indigo-600 font-semibold bg-indigo-50"
-                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                      }`
-                    }
-                  >
+                  <NavLink to="/dashboard" onClick={closeMobileMenu} className={mobileNavLinkClass}>
                     Dashboard
                   </NavLink>
                 )}
 
-                {!isLoggedIn && (
-                  <>
-                    <div className="pt-2 border-t border-slate-200 mt-2">
+                <div className="pt-3 mt-2 border-t border-slate-100 space-y-2">
+                  {!isLoggedIn && (
+                    <>
                       <NavLink
                         to="/login"
                         onClick={closeMobileMenu}
-                        className="block px-3 py-2 rounded-md bg-slate-200 text-slate-800 text-sm font-medium hover:bg-slate-300 transition text-center"
+                        className="block px-4 py-2.5 rounded-xl bg-slate-100 text-slate-800 text-sm font-medium hover:bg-slate-200 transition text-center"
                       >
-                        Login
+                        Sign in
                       </NavLink>
-                    </div>
-                    <NavLink
-                      to="/register"
-                      onClick={closeMobileMenu}
-                      className="block px-3 py-2 rounded-md bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-600 transition text-center"
-                    >
-                      Create account
-                    </NavLink>
-                  </>
-                )}
+                      <NavLink
+                        to="/register"
+                        onClick={closeMobileMenu}
+                        className="block px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium text-center"
+                      >
+                        Get started
+                      </NavLink>
+                    </>
+                  )}
 
-                {isLoggedIn && (
-                  <div className="pt-2 border-t border-slate-200 mt-2">
+                  {isLoggedIn && (
                     <button
                       onClick={handleLogout}
-                      className="w-full px-3 py-2 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition"
+                      className="w-full px-4 py-2.5 rounded-xl text-red-600 bg-red-50 text-sm font-medium hover:bg-red-100 transition"
                     >
-                      Logout
+                      Sign out
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </nav>
           </>
         )}
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
+      {/* Main content */}
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
         {title && (
-          <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900">
+          <div className="mb-8 sm:mb-10">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               {title}
             </h1>
             {subtitle && (
-              <p className="mt-2 text-sm text-slate-500">{subtitle}</p>
+              <p className="mt-2 text-sm sm:text-base text-slate-500 max-w-2xl">
+                {subtitle}
+              </p>
             )}
           </div>
         )}
         {children}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200/60 bg-white/50">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <img src="/favicon.svg" alt="" className="h-5 w-5 opacity-60" />
+            <span>FreelanceHub — Portfolio project by Olena Beliavska</span>
+          </div>
+          <div className="flex items-center gap-4 text-xs text-slate-400">
+            <span>React + Tailwind</span>
+            <span className="w-1 h-1 rounded-full bg-slate-300" />
+            <span>Laravel API</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

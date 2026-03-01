@@ -40,38 +40,45 @@ export default function LoginPage() {
   };
 
   return (
-    <PageContainer
-      title="Sign in to FreelanceHub"
-      subtitle="Access your dashboard to manage jobs and proposals."
-    >
-      <div className="max-w-md mx-auto">
-        <div className="mb-4">
+    <PageContainer>
+      <div className="max-w-md mx-auto pt-4 sm:pt-8">
+        <div className="mb-6">
           <Link
             to="/"
-            className="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+            className="text-sm text-slate-500 hover:text-indigo-600 inline-flex items-center gap-1.5 transition-colors"
           >
-            <span>←</span>
-            <span>Back to home</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            Back to home
           </Link>
         </div>
 
-        <Card className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">
-              Welcome back
-            </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Enter your credentials to continue.
-            </p>
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25 mb-4">
+            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
           </div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Welcome back
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Sign in to access your dashboard and manage your work.
+          </p>
+        </div>
 
+        <Card>
           {error && (
-            <p className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+            <div className="mb-4 flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
               {error}
-            </p>
+            </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Email"
               type="email"
@@ -90,18 +97,22 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[11px] text-slate-400">
-                Use your client or freelancer account to sign in.
-              </span>
-            </div>
-
             <div className="pt-2">
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting ? "Signing in..." : "Sign in"}
               </Button>
             </div>
           </form>
+
+          <p className="text-center text-sm text-slate-500 mt-5 pt-4 border-t border-slate-100">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-indigo-600 font-medium hover:text-indigo-700 transition-colors"
+            >
+              Create one
+            </Link>
+          </p>
         </Card>
       </div>
     </PageContainer>
