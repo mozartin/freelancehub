@@ -35,16 +35,18 @@ export default function HomePage() {
     fetchLatestJobs();
   }, []);
 
-  return (
-    <PageContainer>
-      {/* Hero section */}
-      <section className="mb-12 sm:mb-16">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 animate-gradient px-6 sm:px-10 py-10 sm:py-14">
-          {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-72 h-72 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4" />
+  const heroSection = (
+    <section className="w-full">
+      <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 animate-gradient px-6 sm:px-10 py-14 sm:py-20">
+        {/* Decorative animated elements */}
+        <div className="absolute top-0 right-0 w-72 h-72 bg-white/5 rounded-full animate-float-slow" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full animate-float-slow-reverse" />
+        <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-white rounded-full animate-shimmer" />
+        <div className="absolute -bottom-10 right-1/4 w-64 h-64 bg-violet-400/10 rounded-full animate-float-slow" />
 
-          <div className="relative z-10 max-w-2xl">
+        <div className="relative z-10 mx-auto max-w-6xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
+          {/* Left — text content */}
+          <div className="max-w-2xl lg:max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 text-white/90 text-xs font-medium mb-5 backdrop-blur-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               Platform is live — start exploring
@@ -79,49 +81,33 @@ export default function HomePage() {
               )}
             </div>
           </div>
-        </div>
 
-        {/* Stats bar */}
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          {[
-            { label: "Open jobs", value: jobs.length > 0 ? `${jobs.length}+` : "..." },
-            { label: "Freelancers", value: "Active" },
-            { label: "Tech stack", value: "React + Laravel" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="text-center py-3 px-2 rounded-2xl bg-white border border-slate-100 shadow-sm"
-            >
-              <div className="text-lg sm:text-xl font-bold text-slate-900">
-                {stat.value}
-              </div>
-              <div className="text-xs text-slate-500 mt-0.5">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Portfolio badge */}
-      <section className="mb-10">
-        <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50/80 to-violet-50/80 px-5 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-indigo-500/25">
-                OB
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  Portfolio Project by Olena Beliavska
-                </p>
-                <p className="text-xs text-slate-500">
-                  Full-stack demo: job postings, proposals, client/freelancer dashboards
-                </p>
-              </div>
+          {/* Right — portfolio card */}
+          <div className="hidden lg:flex flex-shrink-0 w-80">
+            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-6 shadow-xl w-full">
+              <p className="text-sm font-semibold text-white mb-2">
+                Portfolio Project
+              </p>
+              <p className="text-sm text-indigo-100/90 leading-relaxed mb-4">
+                FreelanceHub is a full-stack demo app built by{" "}
+                <span className="font-semibold text-white">Olena Beliavska</span>{" "}
+                showcasing a complete freelance workflow: job postings, proposals,
+                and user profiles.
+              </p>
+              <p className="text-xs text-indigo-200/70 leading-relaxed">
+                Built with React + Tailwind CSS frontend, Laravel REST API with
+                authentication, client/freelancer dashboards, and seeded sample
+                data for quick exploration.
+              </p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
 
+  return (
+    <PageContainer hero={heroSection}>
       {/* Latest jobs */}
       <section>
         <div className="mb-5 flex items-center justify-between">

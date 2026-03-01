@@ -130,7 +130,7 @@ export default function DashboardPage() {
               {effectiveUser?.name || "User"}
             </div>
             <div className="text-xs text-slate-500">
-              {effectiveUser?.role === "client" ? "💼 Client" : "🚀 Freelancer"}
+              {effectiveUser?.role === "client" ? "Client" : "Freelancer"}
             </div>
           </div>
         </div>

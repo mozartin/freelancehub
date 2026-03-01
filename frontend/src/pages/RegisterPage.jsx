@@ -144,7 +144,9 @@ export default function RegisterPage() {
                       : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}
                 >
-                  <div className="text-lg mb-1">💼</div>
+                  <div className="text-lg mb-1">
+                    <svg className="w-5 h-5 mx-auto text-indigo-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.073a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V14.15m16.5 0l-2.56-5.118A1.875 1.875 0 0015.882 7.5H8.118a1.875 1.875 0 00-1.808 1.032L3.75 14.15m16.5 0H3.75" /></svg>
+                  </div>
                   Hire talent
                   <div className="text-[11px] text-slate-400 mt-0.5 font-normal">Client</div>
                 </button>
@@ -157,7 +159,9 @@ export default function RegisterPage() {
                       : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}
                 >
-                  <div className="text-lg mb-1">🚀</div>
+                  <div className="text-lg mb-1">
+                    <svg className="w-5 h-5 mx-auto text-indigo-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+                  </div>
                   Find work
                   <div className="text-[11px] text-slate-400 mt-0.5 font-normal">Freelancer</div>
                 </button>

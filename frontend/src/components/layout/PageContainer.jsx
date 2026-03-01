@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
-export default function PageContainer({ title, subtitle, children }) {
+export default function PageContainer({ title, subtitle, hero, children }) {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("auth_token");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -180,6 +180,9 @@ export default function PageContainer({ title, subtitle, children }) {
           </>
         )}
       </header>
+
+      {/* Full-width hero slot */}
+      {hero && hero}
 
       {/* Main content */}
       <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-8 sm:py-12">

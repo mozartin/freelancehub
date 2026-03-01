@@ -52,7 +52,35 @@ body {
 
 .animate-gradient {
   background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* Floating decorative circles */
+@keyframes float-slow {
+  0%, 100% { transform: translate(33%, -50%) scale(1); }
+  50% { transform: translate(28%, -45%) scale(1.08); }
+}
+
+@keyframes float-slow-reverse {
+  0%, 100% { transform: translate(-25%, 33%) scale(1); }
+  50% { transform: translate(-20%, 28%) scale(1.1); }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.1; }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-float-slow-reverse {
+  animation: float-slow-reverse 7s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 4s ease-in-out infinite;
 }
 
 /* Card hover lift */
