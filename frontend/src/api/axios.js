@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Resolve API URL, always ensuring it includes /api and no trailing slash duplication
-const COOLIFY_API = "http://hlyizcistflugyxdbl1gtfw2.2.28.64.235.sslip.io/api";
+const COOLIFY_API = "https://hlyizcistflugyxdbl1gtfw2.2.28.64.235.sslip.io/api";
 
 const getApiUrl = () => {
   const fromEnv = import.meta.env.VITE_API_URL;
